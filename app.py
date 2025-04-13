@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template_string
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import chromedriver_autoinstaller
 import time
 
 app = Flask(__name__)
@@ -32,8 +33,13 @@ def sinclair():
         your_lw = float(request.form["your_lw"])
         margin_needed = float(request.form["margin_needed"])
 
+        chromedriver_autoinstaller.install()
+
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # Optional: remove this if you want to see the browser
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
         driver = webdriver.Chrome(options=options)
 
         try:
@@ -75,4 +81,4 @@ def sinclair():
     return render_template_string(TEMPLATE, result=result)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
